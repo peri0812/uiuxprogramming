@@ -164,13 +164,15 @@ h3 {
   max-width: 570px;
 }
 
-.email-field {
+.email-field,
+.password-field {
   flex: 1;
   margin: 0;
   font-weight: 700;
 }
 
-input[type="email"] {
+input[type="email"],
+input[type="password"] {
   display: block;
   width: 100%;
   margin-top: 8px;
@@ -181,17 +183,20 @@ input[type="email"] {
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-input[type="email"]:hover {
+input[type="email"]:hover,
+input[type="password"]:hover {
   border-color: #8d87d8;
 }
 
-input[type="email"]:focus {
+input[type="email"]:focus,
+input[type="password"]:focus {
   border-color: #5b50c8;
   outline: 3px solid #d9d6ff;
   outline-offset: 2px;
 }
 
-input[type="email"]:active {
+input[type="email"]:active,
+input[type="password"]:active {
   border-color: #4038a5;
 }
 
@@ -280,4 +285,26 @@ input[type="email"]:active {
   button {
     min-height: 48px;
   }
+}
+
+/* 회원가입 전 안내 문구 */
+#registerMessage {
+  margin-top: 16px;
+  color: #555763;
+}
+
+/* JavaScript가 is-registered를 추가하면 완료 상태가 보입니다. */
+#registerMessage.is-registered {
+  color: #245c3a;
+  background-color: #e7f7ed;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* 회원가입 뒤 버튼을 비활성화합니다. */
+#registerButton:disabled {
+  color: #ffffff;
+  background-color: #a8a8b2;
+  cursor: not-allowed;
 }
