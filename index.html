@@ -42,17 +42,39 @@
 
     <section id="features" class="content-section">
       <h2>주요 기능</h2>
+      <div class="tabs" role="tablist" aria-label="주요 기능 선택">
+       <button id="tab-character" class="tab is-active" type="button"
+         role="tab" aria-selected="true"
+          aria-controls="panel-character" data-target="#panel-character">
+          캐릭터 설정 관리
+       </button>
+
+        <button id="tab-sheet" class="tab" type="button"
+          role="tab" aria-selected="false"
+          aria-controls="panel-sheet" data-target="#panel-sheet">
+          캐릭터 시트 관리
+        </button>
+
+        <button id="tab-session" class="tab" type="button"
+          role="tab" aria-selected="false"
+          aria-controls="panel-session" data-target="#panel-session">
+          세션 기록 관리
+        </button>
+      </div>
 
       <ul class="feature-list">
-        <li class="feature-card">
+        <li id="panel-character" class="feature-card panel is-active"
+          role="tabpanel" aria-labelledby="tab-character">
           <h3>캐릭터 설정 관리</h3>
           <p>캐릭터의 성격 등의 백그라운드 설정을 정리합니다.</p>
         </li>
-        <li class="feature-card">
+        <li id="panel-sheet" class="feature-card panel"
+          role="tabpanel" aria-labelledby="tab-sheet" hidden>
           <h3>캐릭터 시트 관리</h3>
           <p>캐릭터 시트를 관리합니다. 지원 룰: COC, 인세인, 마기로기, 덥크, 로그호라</p>
         </li>
-        <li class="feature-card">
+        <li id="panel-session" class="feature-card panel"
+          role="tabpanel" aria-labelledby="tab-session" hidden>
           <h3>세션 기록 관리</h3>
           <p>캐릭터 별 플레이 기록을 저장할 수 있습니다.</p>
         </li>
@@ -94,6 +116,42 @@
         </label>
         <button id="registerButton" class="primary-button" type="submit">회원 가입</button>
       </form>
+    </section>
+    <section id="interaction-practice" class="settings-panel">
+      <h2>서비스 이용 설정</h2>
+
+      <div class="interaction-item">
+        <h3>화면 테마</h3>
+        <button id="themeButton" type="button">
+          어두운 테마로 바꾸기
+        </button>
+      </div>
+
+      <div class="interaction-item">
+        <label for="userName">사용자 이름</label>
+        <input
+          id="userName"
+          type="text"
+          maxlength="10"
+          placeholder="10자 이내로 입력"
+        >
+        <p id="userNameCount" aria-live="polite">0 / 10</p>
+      </div>
+
+      <div class="interaction-item">
+        <label class="agree-row" for="agreeCheck">
+         <input id="agreeCheck" type="checkbox">
+         서비스 이용 안내를 확인했습니다.
+        </label>
+
+       <p id="agreeMessage" aria-live="polite">
+         안내 확인 후 서비스를 시작할 수 있습니다.
+        </p>
+
+       <button id="startButton" type="button" disabled>
+          서비스 시작하기
+        </button>
+       </div>
     </section>
   </main>
 
