@@ -301,6 +301,21 @@ body.dark .interaction-item {
   background-color: #2d2e38;
 }
 
+/* 어두운 테마 배경색 수정 */
+body.dark .content-section {
+  background-color: #2d2e38;
+  color: #f4f4f8;
+  border-color: #50515f;
+}
+
+body.dark .subscribe-section {
+  background-color: #343246;
+}
+
+body.dark #registerMessage {
+  color: #d8d8e2;
+}
+
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -373,7 +388,7 @@ body.dark .interaction-item {
   }
 
   /* Grid 카드 목록을 한 열로 고정 */
-  .features-list {
+  .feature-list {
     grid-template-columns: 1fr;
   }
 
@@ -436,4 +451,156 @@ body.dark .interaction-item {
   color: #ffffff;
   background-color: #a8a8b2;
   cursor: not-allowed;
+}
+
+
+/* 7주차: 캐릭터 등록 흐름 */
+#characterFlow {
+  margin-top: 24px;
+}
+
+/* 단계별 화면 */
+.character-step {
+  padding: 24px;
+  border: 1px solid #deddea;
+  border-radius: 12px;
+  background-color: #f4f3ff;
+}
+
+/* 현재 단계가 아닌 화면 숨기기 */
+#characterFlow[hidden],
+.character-step[hidden] {
+  display: none;
+}
+
+/* 진행 상태 */
+#characterProgress {
+  margin-bottom: 20px;
+  color: #5b50c8;
+  font-weight: 700;
+}
+
+/* 입력 항목 */
+.character-step label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.character-step input,
+.character-step select {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  padding: 12px 14px;
+  border: 1px solid #bfc1d1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #292a31;
+  font: inherit;
+}
+
+.character-step input:focus,
+.character-step select:focus {
+  border-color: #5b50c8;
+  outline: 3px solid #d9d6ff;
+  outline-offset: 2px;
+}
+
+/* 입력 오류 */
+#characterError,
+#ruleError {
+  margin-top: 8px;
+  color: #9d2439;
+  font-size: 14px;
+}
+
+.character-step .has-error {
+  border-color: #9d2439;
+}
+
+/* 단계 이동 버튼 */
+.character-step button {
+  margin-top: 16px;
+  margin-right: 8px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background-color: #5b50c8;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.character-step button:hover {
+  background-color: #4038a5;
+}
+
+.character-step button:focus-visible {
+  outline: 3px solid #b9b4ef;
+  outline-offset: 3px;
+}
+
+/* 등록 정보 확인 */
+#characterSummary {
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  line-height: 1.8;
+}
+
+/* 6주차 어두운 테마 연동 */
+body.dark #characterFlow,
+body.dark .character-step {
+  color: #f4f4f8;
+  background-color: #2d2e38;
+  border-color: #50515f;
+}
+
+body.dark #characterProgress {
+  color: #b9b4ef;
+}
+
+body.dark .character-step input,
+body.dark .character-step select {
+  color: #f4f4f8;
+  background-color: #20212a;
+  border-color: #77798b;
+}
+
+body.dark #characterSummary {
+  color: #f4f4f8;
+  background-color: #20212a;
+}
+
+body.dark #characterError,
+body.dark #ruleError {
+  color: #ff9aa9;
+}
+
+/* 모바일 화면 */
+@media (max-width: 768px) {
+  #characterFlow {
+    margin-top: 40px;
+  }
+
+  .character-step {
+    margin-top: 0;
+    padding: 16px;
+  }
+
+  .character-step input,
+  .character-step select {
+    max-width: 100%;
+  }
+
+  .character-step button {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+    margin-right: 0;
+  }
 }

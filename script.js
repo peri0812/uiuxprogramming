@@ -67,7 +67,13 @@ function registerUser() {
 }
 
 // addEventListener(애드 이벤트 리스너)로 이벤트와 함수를 연결합니다.
-registerButton.addEventListener("click", registerUser);
+
+const registerForm = document.querySelector(".subscribe-form");
+
+registerForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  registerUser();
+});
 
 const themeButton = document.querySelector("#themeButton");
 const userNameInput = document.querySelector("#userName");
@@ -140,3 +146,151 @@ function handleTabClick(event) {
 tabs.forEach(function (tab) {
   tab.addEventListener("click", handleTabClick);
 });
+
+// 캐릭터 등록 화면과 입력 요소
+const characterFlow = document.querySelector("#characterFlow");
+const characterSteps = document.querySelectorAll(".character-step");
+const characterProgress = document.querySelector("#characterProgress");
+const characterName = document.querySelector("#characterName");
+const characterRule = document.querySelector("#characterRule");
+const characterError = document.querySelector("#characterError");
+const ruleError = document.querySelector("#ruleError");
+const characterSummary = document.querySelector("#characterSummary");
+
+const characterStepNames = [
+  "캐릭터 정보 입력",
+  "TRPG 룰 선택",
+  "등록 정보 확인"
+];
+
+// 단계에 따라 화면 전환
+function showCharacterStep(step) {
+  characterSteps.forEach(function (item) {
+    item.hidden = Number(item.dataset.step) !== step;
+  });
+
+  characterProgress.textContent = step <= 3
+    ? `${step} / 3 · ${characterStepNames[step - 1]}`
+    : "캐릭터 등록 완료";
+}
+
+// 입력 오류 표시 및 해제
+function setCharacterError(input, errorElement, message) {
+  errorElement.textContent = message;
+  input.classList.toggle("has-error", Boolean(message));
+
+  if (message) {
+    input.setAttribute("aria-invalid", "true");
+  } else {
+    input.removeAttribute("aria-invalid");
+  }
+}
+
+// 기존 서비스 시작 버튼과 연결
+startButton.addEventListener("click", function () {
+  if (!agreeCheck.checked) {
+    return;
+  }
+
+  characterFlow.hidden = false;
+  showCharacterStep(1);
+
+  characterFlow.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  characterName.focus({ preventScroll: true });
+});
+
+// 1단계: 캐릭터 이름 검사
+document.querySelector("#characterNext1")
+  .addEventListener("click", function () {
+    const name = characterName.value.trim();
+
+    if (!name) {
+      setCharacterError(
+        characterName,
+        characterError,
+        "캐릭터 이름을 입력해 주세요."
+      );
+      characterName.focus();
+      return;
+    }
+
+    setCharacterError(characterName, characterError, "");
+    showCharacterStep(2);
+    characterRule.focus();
+  });
+
+// 이름 수정 시 오류 메시지 제거
+characterName.addEventListener("input", function () {
+  if (characterName.value.trim()) {
+    setCharacterError(characterName, characterError, "");
+  }
+});
+
+// 2단계: TRPG 룰 선택 검사
+document.querySelector("#characterNext2")
+  .addEventListener("click", function () {
+    if (!characterRule.value) {
+      setCharacterError(
+        characterRule,
+        ruleError,
+        "사용할 TRPG 룰을 선택해 주세요."
+      );
+      characterRule.focus();
+      return;
+    }
+
+    setCharacterError(characterRule, ruleError, "");
+
+    // 입력 내용을 확인 화면에 표시
+    characterSummary.textContent =
+      `캐릭터 이름: ${characterName.value.trim()} / ` +
+      `TRPG 룰: ${characterRule.value}`;
+
+    showCharacterStep(3);
+  });
+
+// 룰 변경 시 오류 메시지 제거
+characterRule.addEventListener("change", function () {
+  if (characterRule.value) {
+    setCharacterError(characterRule, ruleError, "");
+  }
+});
+
+// 2단계에서 1단계로 돌아가기
+document.querySelector("#characterBack2")
+  .addEventListener("click", function () {
+    showCharacterStep(1);
+    characterName.focus();
+  });
+
+// 3단계에서 2단계로 돌아가기
+document.querySelector("#characterBack3")
+  .addEventListener("click", function () {
+    showCharacterStep(2);
+    characterRule.focus();
+  });
+
+// 캐릭터 등록 완료
+document.querySelector("#characterComplete")
+  .addEventListener("click", function () {
+    showCharacterStep(4);
+  });
+
+// 다시 등록하기: 입력값과 진행 상태 초기화
+document.querySelector("#characterRestart")
+  .addEventListener("click", function () {
+    characterName.value = "";
+    characterRule.value = "";
+
+    setCharacterError(characterName, characterError, "");
+    setCharacterError(characterRule, ruleError, "");
+
+    characterSummary.textContent = "";
+
+    showCharacterStep(1);
+    characterName.focus();
+  });
