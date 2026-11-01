@@ -70,6 +70,7 @@ h3 {
 .site-nav {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 24px;
   margin-top: 24px;
 }
@@ -89,6 +90,23 @@ h3 {
 .site-nav a:focus {
   outline: 3px solid #b9b4ef;
   outline-offset: 3px;
+}
+
+#themeButton {
+  margin-left: auto;
+  padding: 10px 14px;
+  border: 1px solid #d7d4f6;
+  border-radius: 8px;
+  color: #5b50c8;
+  background-color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#themeButton:hover {
+  color: #ffffff;
+  background-color: #5b50c8;
 }
 
 .content-section {
@@ -232,58 +250,6 @@ input[type="password"]:active {
   font-size: 14px;
 }
 
-#interaction-practice {
-  margin-top: 56px;
-}
-
-.interaction-item {
-  margin-top: 20px;
-  padding: 24px;
-  border: 1px solid #deddea;
-  border-radius: 12px;
-  background-color: #ffffff;
-}
-
-.interaction-item label:not(.agree-row) {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.interaction-item input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.agree-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.agree-row input {
-  flex: 0 0 auto;
-  margin-top: 6px;
-}
-
-#agreeMessage {
-  padding: 12px;
-  border-radius: 10px;
-  background-color: #ecebf2;
-}
-
-#agreeMessage.is-ready {
-  color: #245c3a;
-  background-color: #e7f7ed;
-  font-weight: 700;
-}
-
-#startButton:disabled {
-  color: #ffffff;
-  background-color: #a8a8b2;
-  cursor: not-allowed;
-}
-
 body.dark {
   color: #f4f4f8;
   background-color: #20212a;
@@ -294,9 +260,7 @@ body.dark nav a {
   color: #d8d8e2;
 }
 
-body.dark .feature-card,
-body.dark .settings-panel,
-body.dark .interaction-item {
+body.dark .feature-card {
   border-color: #50515f;
   background-color: #2d2e38;
 }
@@ -405,19 +369,6 @@ body.dark #registerMessage {
 
   button {
     min-height: 48px;
-  }
-
-  #interaction-practice {
-    margin-top: 40px;
-  }
-
-  .interaction-item {
-    padding: 20px;
-  }
-
-  .interaction-item input[type="text"],
-  .interaction-item button {
-    width: 100%;
   }
 
   .tabs {
@@ -551,6 +502,90 @@ body.dark #registerMessage {
   line-height: 1.8;
 }
 
+/* 세션 기록 */
+#sessionFlow {
+  margin-top: 24px;
+}
+
+#sessionFlow[hidden] {
+  display: none;
+}
+
+.session-form {
+  padding: 24px;
+  border: 1px solid #deddea;
+  border-radius: 12px;
+  background-color: #f4f3ff;
+}
+
+.session-form label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.session-form input,
+.session-form textarea {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 14px;
+  border: 1px solid #bfc1d1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #292a31;
+  font: inherit;
+}
+
+.session-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.session-form input:focus,
+.session-form textarea:focus {
+  border-color: #5b50c8;
+  outline: 3px solid #d9d6ff;
+  outline-offset: 2px;
+}
+
+#sessionError {
+  margin-top: 8px;
+  color: #9d2439;
+  font-size: 14px;
+}
+
+#sessionSave,
+#sessionRestart {
+  margin-top: 16px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background-color: #5b50c8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#sessionSave:hover,
+#sessionRestart:hover {
+  background-color: #4038a5;
+}
+
+#sessionResult {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #d7d4f6;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+#sessionResult[hidden] {
+  display: none;
+}
+
 /* 6주차 어두운 테마 연동 */
 body.dark #characterFlow,
 body.dark .character-step {
@@ -580,6 +615,58 @@ body.dark #ruleError {
   color: #ff9aa9;
 }
 
+body.dark .session-form,
+body.dark #sessionResult {
+  color: #f4f4f8;
+  background-color: #2d2e38;
+  border-color: #50515f;
+}
+
+body.dark .session-form input,
+body.dark .session-form textarea {
+  color: #f4f4f8;
+  background-color: #20212a;
+  border-color: #77798b;
+}
+
+body.dark #sessionError {
+  color: #ff9aa9;
+}
+
+body.dark #themeButton {
+  color: #f4f4f8;
+  background-color: #2d2e38;
+  border-color: #77798b;
+}
+
+body.dark button {
+  color: #f4f4f8;
+  background-color: #3a3b47;
+  border-color: #676978;
+}
+
+body.dark button:hover {
+  background-color: #4a4c5a;
+}
+
+body.dark button:disabled {
+  color: #c8c8d0;
+  background-color: #5a5b66;
+  cursor: not-allowed;
+}
+
+body.dark #sessionSave,
+body.dark #sessionRestart {
+  color: #f4f4f8;
+  background-color: #3a3b47;
+  border-color: #676978;
+}
+
+body.dark #sessionSave:hover,
+body.dark #sessionRestart:hover {
+  background-color: #4a4c5a;
+}
+
 /* 모바일 화면 */
 @media (max-width: 768px) {
   #characterFlow {
@@ -602,5 +689,34 @@ body.dark #ruleError {
     min-height: 48px;
     margin-top: 8px;
     margin-right: 0;
+  }
+
+  nav {
+   flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  #themeButton {
+    margin-left: 0;
+  }
+
+  #sessionFlow {
+   margin-top: 40px;
+  }
+
+  .session-form {
+   padding: 16px;
+  }
+
+  .session-form input,
+  .session-form textarea {
+    max-width: 100%;
+  }
+
+  #sessionSave,
+  #sessionRestart {
+    width: 100%;
+    min-height: 48px;
   }
 }

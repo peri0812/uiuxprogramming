@@ -42,6 +42,8 @@ console.log(testMessage);
 // #은 id 선택자이며 HTML의 id와 철자가 같아야 합니다.
 const registerMessage = document.querySelector("#registerMessage");
 const registerButton = document.querySelector("#registerButton");
+const characterFlow = document.querySelector("#characterFlow");
+const registerSection = document.querySelector("#register");
 
 // 찾은 HTML 요소를 확인합니다.
 console.log(registerMessage, registerButton);
@@ -63,6 +65,12 @@ function registerUser() {
   // disabled(디스에이블드)는 중복 클릭을 막습니다.
   registerButton.disabled = true;
 
+  registerSection.hidden = true;
+  characterFlow.hidden = false;
+  showCharacterStep(1);
+
+  registerCompleteMessage.hidden = false;
+
   console.log("회원가입이 완료되었습니다.");
 }
 
@@ -76,11 +84,6 @@ registerForm.addEventListener("submit", function (event) {
 });
 
 const themeButton = document.querySelector("#themeButton");
-const userNameInput = document.querySelector("#userName");
-const userNameCount = document.querySelector("#userNameCount");
-const agreeCheck = document.querySelector("#agreeCheck");
-const agreeMessage = document.querySelector("#agreeMessage");
-const startButton = document.querySelector("#startButton");
 
 function handleThemeClick() {
   const isDark = document.body.classList.toggle("dark");
@@ -91,26 +94,6 @@ function handleThemeClick() {
 }
 
 themeButton.addEventListener("click", handleThemeClick);
-
-function handleUserNameInput() {
-  const currentLength = userNameInput.value.length;
-  userNameCount.textContent = currentLength + " / 10";
-}
-
-userNameInput.addEventListener("input", handleUserNameInput);
-
-function handleAgreeChange() {
-  const agreed = agreeCheck.checked;
-
-  startButton.disabled = !agreed;
-  agreeMessage.textContent = agreed
-    ? "확인이 완료되었습니다. 서비스를 시작할 수 있습니다."
-    : "안내 확인 후 서비스를 시작할 수 있습니다.";
-
-  agreeMessage.classList.toggle("is-ready", agreed);
-}
-
-agreeCheck.addEventListener("change", handleAgreeChange);
 
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".panel");
@@ -148,7 +131,6 @@ tabs.forEach(function (tab) {
 });
 
 // 캐릭터 등록 화면과 입력 요소
-const characterFlow = document.querySelector("#characterFlow");
 const characterSteps = document.querySelectorAll(".character-step");
 const characterProgress = document.querySelector("#characterProgress");
 const characterName = document.querySelector("#characterName");
@@ -185,23 +167,6 @@ function setCharacterError(input, errorElement, message) {
     input.removeAttribute("aria-invalid");
   }
 }
-
-// 기존 서비스 시작 버튼과 연결
-startButton.addEventListener("click", function () {
-  if (!agreeCheck.checked) {
-    return;
-  }
-
-  characterFlow.hidden = false;
-  showCharacterStep(1);
-
-  characterFlow.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
-  characterName.focus({ preventScroll: true });
-});
 
 // 1단계: 캐릭터 이름 검사
 document.querySelector("#characterNext1")
@@ -277,20 +242,61 @@ document.querySelector("#characterBack3")
 // 캐릭터 등록 완료
 document.querySelector("#characterComplete")
   .addEventListener("click", function () {
-    showCharacterStep(4);
+    characterFlow.hidden = true;
+    sessionFlow.hidden = false;
+
+    sessionCharacterName.textContent = characterName.value.trim();
   });
 
-// 다시 등록하기: 입력값과 진행 상태 초기화
-document.querySelector("#characterRestart")
-  .addEventListener("click", function () {
-    characterName.value = "";
-    characterRule.value = "";
+const sessionFlow = document.querySelector("#sessionFlow");
+const sessionCharacterName = document.querySelector("#sessionCharacterName");
+const sessionForm = document.querySelector(".session-form");
 
-    setCharacterError(characterName, characterError, "");
-    setCharacterError(characterRule, ruleError, "");
+const sessionTitle = document.querySelector("#sessionTitle");
+const sessionDate = document.querySelector("#sessionDate");
+const sessionLog = document.querySelector("#sessionLog");
+const sessionError = document.querySelector("#sessionError");
+const sessionSave = document.querySelector("#sessionSave");
+const sessionResult = document.querySelector("#sessionResult");
+const sessionSummary = document.querySelector("#sessionSummary");
+const sessionRestart = document.querySelector("#sessionRestart");
 
-    characterSummary.textContent = "";
+sessionSave.addEventListener("click", function () {
+  const title = sessionTitle.value.trim();
+  const date = sessionDate.value;
+  const log = sessionLog.value.trim();
 
-    showCharacterStep(1);
-    characterName.focus();
-  });
+  if (!title) {
+    sessionError.textContent = "세션 제목을 입력해 주세요.";
+    sessionTitle.focus();
+    return;
+  }
+
+  if (!date) {
+    sessionError.textContent = "플레이 날짜를 입력해 주세요.";
+    sessionDate.focus();
+    return;
+  }
+
+  sessionError.textContent = "";
+
+  sessionSummary.textContent =
+    `캐릭터: ${characterName.value.trim()} / ` +
+    `세션: ${title} / ` +
+    `날짜: ${date} / ` +
+    `기록: ${log || "작성된 기록 없음"}`;
+    
+  sessionForm.hidden = true;
+  sessionResult.hidden = false;
+});
+
+sessionRestart.addEventListener("click", function () {
+  sessionTitle.value = "";
+  sessionDate.value = "";
+  sessionLog.value = "";
+  sessionError.textContent = "";
+  sessionResult.hidden = true;
+  sessionForm.hidden = false;
+
+  sessionTitle.focus();
+});
