@@ -720,3 +720,22 @@ body.dark #sessionRestart:hover {
     min-height: 48px;
   }
 }
+
+/* 세션 제목 입력 상태 */
+
+/* 입력 조건 충족 */
+#sessionTitle.is-valid {
+  border-color: #16805d;
+}
+
+/* 입력 오류 */
+#sessionTitle[aria-invalid="true"] {
+  border-color: #9d2439;
+  outline: 2px solid #9d2439;
+}
+
+/* 어두운 테마 오류 표시 */
+body.dark #sessionTitle[aria-invalid="true"] {
+  border-color: #ff9aa9;
+  outline-color: #ff9aa9;
+}

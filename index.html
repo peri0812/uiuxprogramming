@@ -181,12 +181,18 @@
         </p>
 
         <div class="session-form">
-          <label for="sessionTitle">세션 제목</label>
+          <label for="sessionTitle">세션 제목 (필수)</label>
           <input
            id="sessionTitle"
             type="text"
+            minlength="2"
+            maxlength="60"
+            required
             placeholder="세션 제목을 입력하세요"
+            aria-describedby="sessionTitleHelp sessionTitleCount"
           >
+          <p id="sessionTitleHelp">세션 제목을 2자 이상 입력해 주세요.</p>
+          <p id="sessionTitleCount">0 / 60자</p>
 
           <label for="sessionDate">플레이 날짜</label>
           <input
@@ -195,17 +201,30 @@
             placeholder="2026.11.01 또는 2026/11/01"
           >
 
-          <label for="sessionLog">세션 기록</label>
-          <textarea
-            id="sessionLog"
-            placeholder="플레이 중 있었던 일을 기록하세요"
-          ></textarea>
+          <label for="sessionLogOption">
+            <input
+              id="sessionLogOption"
+              type="checkbox"
+              aria-controls="sessionLogFields"
+              aria-expanded="false"
+            >
+            세션 상세 기록 작성하기 (선택)
+          </label>
+          <div id="sessionLogFields" hidden>
+            <label for="sessionLog">세션 기록</label>
+             <textarea
+              id="sessionLog"
+              placeholder="플레이 중 있었던 일을 기록하세요"
+              disabled
+            ></textarea>
+          </div>
 
           <p id="sessionError" role="alert"></p>
 
           <button id="sessionSave" type="button">
             세션 기록 저장
           </button>
+          <p id="sessionStatus" role="status" aria-live="polite"></p>
         </div>
 
         <div id="sessionResult" hidden>

@@ -253,10 +253,58 @@ const sessionCharacterName = document.querySelector("#sessionCharacterName");
 const sessionForm = document.querySelector(".session-form");
 
 const sessionTitle = document.querySelector("#sessionTitle");
+const sessionTitleHelp = document.querySelector("#sessionTitleHelp");
+const sessionTitleCount = document.querySelector("#sessionTitleCount");
+
+sessionTitle.addEventListener("input", function () {
+  const length = sessionTitle.value.length;
+  const enough = sessionTitle.value.trim().length >= 2;
+
+  sessionTitleCount.textContent = `${length} / 60자`;
+
+  if (enough) {
+    sessionTitleHelp.textContent = "입력 조건을 충족했습니다.";
+  } else {
+    sessionTitleHelp.textContent = "세션 제목을 2자 이상 입력해 주세요.";
+  }
+   // 오류가 발생한 상태에서 입력을 수정하면 다시 검사
+  if (sessionTitle.getAttribute("aria-invalid") === "true") {
+    if (!sessionTitle.value.trim()) {
+      sessionError.textContent = "세션 제목을 입력해 주세요.";
+    } else if (!enough) {
+      sessionError.textContent = "세션 제목을 2자 이상 입력해 주세요.";
+    } else {
+      sessionError.textContent = "";
+      sessionTitle.removeAttribute("aria-invalid");
+    }
+  }
+
+  // 조건 충족 상태 표시
+  sessionTitle.classList.toggle(
+    "is-valid",
+    enough && sessionTitle.getAttribute("aria-invalid") !== "true"
+  );
+});
 const sessionDate = document.querySelector("#sessionDate");
 const sessionLog = document.querySelector("#sessionLog");
+// 세션 상세 기록 선택
+const sessionLogOption = document.querySelector("#sessionLogOption");
+const sessionLogFields = document.querySelector("#sessionLogFields");
+
+// 체크박스 상태에 따라 입력창 표시
+function syncSessionLogFields() {
+  const open = sessionLogOption.checked;
+
+  sessionLogOption.setAttribute("aria-expanded", String(open));
+  sessionLogFields.hidden = !open;
+  sessionLog.disabled = !open;
+}
+
+sessionLogOption.addEventListener("change", syncSessionLogFields);
+syncSessionLogFields();
 const sessionError = document.querySelector("#sessionError");
 const sessionSave = document.querySelector("#sessionSave");
+const sessionStatus = document.querySelector("#sessionStatus");
 const sessionResult = document.querySelector("#sessionResult");
 const sessionSummary = document.querySelector("#sessionSummary");
 const sessionRestart = document.querySelector("#sessionRestart");
@@ -264,13 +312,27 @@ const sessionRestart = document.querySelector("#sessionRestart");
 sessionSave.addEventListener("click", function () {
   const title = sessionTitle.value.trim();
   const date = sessionDate.value;
-  const log = sessionLog.value.trim();
+  
+  // 체크박스를 선택한 경우에만 상세 기록 사용
+  const log = sessionLogOption.checked
+    ? sessionLog.value.trim()
+    : "";
 
   if (!title) {
     sessionError.textContent = "세션 제목을 입력해 주세요.";
+    sessionTitle.setAttribute("aria-invalid", "true");
     sessionTitle.focus();
     return;
   }
+
+  if (title.length < 2) {
+    sessionError.textContent = "세션 제목을 2자 이상 입력해 주세요.";
+    sessionTitle.setAttribute("aria-invalid", "true");
+    sessionTitle.focus();
+    return;
+  }
+
+  sessionTitle.removeAttribute("aria-invalid");
 
   if (!date) {
     sessionError.textContent = "플레이 날짜를 입력해 주세요.";
@@ -278,23 +340,66 @@ sessionSave.addEventListener("click", function () {
     return;
   }
 
-  sessionError.textContent = "";
+sessionError.textContent = "";
 
-  sessionSummary.textContent =
-    `캐릭터: ${characterName.value.trim()} / ` +
-    `세션: ${title} / ` +
-    `날짜: ${date} / ` +
-    `기록: ${log || "작성된 기록 없음"}`;
-    
-  sessionForm.hidden = true;
-  sessionResult.hidden = false;
+  // 저장 중 상태 표시
+  sessionSave.disabled = true;
+  sessionSave.textContent = "저장하는 중…";
+  sessionStatus.textContent = "세션 기록을 처리하고 있습니다.";
+  sessionForm.setAttribute("aria-busy", "true");
+
+  // 저장 처리 시간 표현
+  setTimeout(function () {
+    // 9주차: 저장 실패 상황 테스트
+    const forceSaveFailure =
+      new URLSearchParams(window.location.search).has("save-error");
+
+    if (forceSaveFailure) {
+      sessionSave.disabled = false;
+      sessionSave.textContent = "세션 기록 저장";
+      sessionStatus.textContent =
+        "저장하지 못했습니다. 입력한 내용은 그대로 두었습니다. 다시 시도해 주세요.";
+      sessionForm.setAttribute("aria-busy", "false");
+      return;
+    }
+    sessionSummary.textContent =
+      `캐릭터: ${characterName.value.trim()} / ` +
+      `세션: ${title} / ` +
+      `날짜: ${date} / ` +
+      `기록: ${log || "작성된 기록 없음"}`;
+
+    // 저장 완료 상태
+    sessionSave.disabled = false;
+    sessionSave.textContent = "세션 기록 저장";
+    sessionStatus.textContent = "세션 기록이 완료되었습니다.";
+    sessionForm.setAttribute("aria-busy", "false");
+
+    sessionForm.hidden = true;
+    sessionResult.hidden = false;
+  }, 600);
 });
 
 sessionRestart.addEventListener("click", function () {
+  // 입력값 초기화
   sessionTitle.value = "";
   sessionDate.value = "";
   sessionLog.value = "";
+
+  // 체크박스와 상세 기록 입력창 초기화
+  sessionLogOption.checked = false;
+  syncSessionLogFields();
+
+  // 글자 수와 안내 문구 초기화
+  sessionTitleCount.textContent = "0 / 60자";
+  sessionTitleHelp.textContent = "세션 제목을 2자 이상 입력해 주세요.";
+
+  // 오류 및 입력 상태 초기화
   sessionError.textContent = "";
+  sessionStatus.textContent = "";
+  sessionTitle.removeAttribute("aria-invalid");
+  sessionTitle.classList.remove("is-valid");
+
+  // 새 세션 작성 화면 표시
   sessionResult.hidden = true;
   sessionForm.hidden = false;
 
