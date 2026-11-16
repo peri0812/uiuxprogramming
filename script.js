@@ -368,6 +368,23 @@ sessionError.textContent = "";
       `날짜: ${date} / ` +
       `기록: ${log || "작성된 기록 없음"}`;
 
+    // 저장된 세션을 목록에 추가
+    savedSessions.push({
+      character: characterName.value.trim(),
+      title: title,
+      date: date,
+      log: log
+    });
+
+    // 새로고침 후에도 기록 유지
+    localStorage.setItem(
+      "trpgSessions",
+      JSON.stringify(savedSessions)
+    );
+
+    // 저장 목록 갱신
+    renderSessions();  
+
     // 저장 완료 상태
     sessionSave.disabled = false;
     sessionSave.textContent = "세션 기록 저장";
@@ -404,4 +421,141 @@ sessionRestart.addEventListener("click", function () {
   sessionForm.hidden = false;
 
   sessionTitle.focus();
+});
+
+// 주소에 따라 현재 메뉴 표시
+const navLinks = document.querySelectorAll(".site-nav a");
+
+const menuToggle = document.querySelector("#menuToggle");
+const mainNav = document.querySelector("#main-nav");
+
+function updateCurrentNav() {
+  const currentHash = window.location.hash;
+
+  navLinks.forEach(function (link) {
+    const current = currentHash
+      ? link.getAttribute("href") === currentHash
+      : link === navLinks[0];
+
+    link.classList.toggle("is-current", current);
+
+    if (current) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+window.addEventListener("hashchange", updateCurrentNav);
+updateCurrentNav();
+
+
+ // 세션 기록 필터
+const filterButtons = document.querySelectorAll(".filter-button");
+let currentFilter = "all";
+
+// 필터 버튼 클릭
+filterButtons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    currentFilter = button.dataset.filter;
+
+    filterButtons.forEach(function (item) {
+      const selected = item === button;
+
+      item.classList.toggle("is-active", selected);
+      item.setAttribute("aria-pressed", String(selected));
+    });
+  renderSessions();  
+  });
+});
+
+
+ // 10주차: 저장한 세션 기록 목록
+const savedSessions = JSON.parse(
+  localStorage.getItem("trpgSessions") || "[]"
+);
+
+const sessionList = document.querySelector("#sessionList");
+const sessionEmpty = document.querySelector("#sessionEmpty");
+const sessionEmptyMessage = document.querySelector("#sessionEmptyMessage");
+const sessionCount = document.querySelector("#sessionCount");
+
+// 선택한 조건에 맞는 세션 가져오기
+function getVisibleSessions() {
+  return savedSessions.filter(function (session) {
+    if (currentFilter === "all") return true;
+    if (currentFilter === "detail") return Boolean(session.log);
+    return !session.log;
+  });
+}
+
+// 세션 기록 목록 표시
+function renderSessions() {
+  const visibleSessions = getVisibleSessions();
+
+  sessionList.replaceChildren();
+
+  sessionEmpty.hidden = visibleSessions.length !== 0;
+  sessionList.hidden = visibleSessions.length === 0;
+
+  sessionCount.textContent =
+    `표시 중인 세션 ${visibleSessions.length}개`;
+
+  if (visibleSessions.length === 0) {
+    sessionEmptyMessage.textContent = currentFilter === "all"
+      ? "아직 저장한 세션 기록이 없습니다."
+      : "선택한 조건의 세션 기록이 없습니다.";
+  }
+
+  visibleSessions.forEach(function (session) {
+    const card = document.createElement("article");
+    card.className = "session-card";
+
+    const title = document.createElement("h3");
+    title.textContent = session.title;
+
+    const information = document.createElement("p");
+    information.textContent =
+      `캐릭터: ${session.character} / 날짜: ${session.date}`;
+
+    const detailButton = document.createElement("button");
+    detailButton.type = "button";
+    detailButton.textContent = "내용 보기";
+
+    const detail = document.createElement("p");
+    detail.textContent = session.log || "상세 기록이 없습니다.";
+    detail.hidden = true;
+
+    detailButton.addEventListener("click", function () {
+      detail.hidden = !detail.hidden;
+      detailButton.textContent = detail.hidden
+        ? "내용 보기"
+        : "내용 닫기";
+    });
+
+    card.append(title, information, detailButton, detail);
+    sessionList.append(card);
+  });
+}
+
+// 처음 화면에 목록 표시
+renderSessions();
+
+
+// 모바일 메뉴 열기와 닫기
+menuToggle.addEventListener("click", function () {
+  const isOpen = mainNav.classList.toggle("is-open");
+
+  menuToggle.textContent = isOpen ? "메뉴 닫기" : "메뉴 열기";
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+// 메뉴를 선택하면 자동으로 닫기
+navLinks.forEach(function (link) {
+  link.addEventListener("click", function () {
+    mainNav.classList.remove("is-open");
+    menuToggle.textContent = "메뉴 열기";
+    menuToggle.setAttribute("aria-expanded", "false");
+  });
 });

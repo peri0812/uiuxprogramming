@@ -19,7 +19,12 @@
     <h1>TRPG 서랍장</h1>
     <p class="header-description">여러 스프레드시트에 나뉘어져있는 TRPG 캐릭터를 정리하는 홈페이지를 만듭니다.</p>
 
-    <nav class="site-nav" aria-label="주요 메뉴">
+    <button id="menuToggle" class="menu-toggle" type="button"
+      aria-controls="main-nav" aria-expanded="false">
+      메뉴 열기
+    </button>
+
+    <nav id="main-nav" class="site-nav" aria-label="주요 메뉴">
       <a href="#about">서비스 소개</a>
       <a href="#features">주요 기능</a>
       <a href="#steps">이용 방법</a>
@@ -236,6 +241,36 @@
           </button>
         </div>
     </section>
+
+  <section id="sessionArchive" class="content-section">
+    <h2>세션 기록 모아보기</h2>
+    <p>저장한 세션 기록을 확인할 수 있습니다.</p>
+
+   <div class="session-filters" role="group"
+      aria-label="세션 기록 필터">
+      <button class="filter-button is-active"
+        type="button" data-filter="all"
+        aria-pressed="true">전체</button>
+
+      <button class="filter-button"
+        type="button" data-filter="detail"
+        aria-pressed="false">상세 기록 있음</button>
+
+      <button class="filter-button"
+        type="button" data-filter="simple"
+        aria-pressed="false">상세 기록 없음</button>
+    </div>
+
+    <p id="sessionCount">표시 중인 세션 0개</p>
+
+    <div id="sessionEmpty">
+      <p id="sessionEmptyMessage">
+        아직 저장한 세션 기록이 없습니다.
+      </p>
+    </div>
+
+    <div id="sessionList"></div>
+  </section>
   </main>
 
   <footer class="site-footer">

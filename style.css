@@ -87,6 +87,12 @@ h3 {
   background-color: #ebe9ff;
 }
 
+.site-nav a.is-current {
+  color: #4038a5;
+  background-color: #ebe9ff;
+  box-shadow: inset 0 -3px 0 #5b50c8;
+}
+
 .site-nav a:focus {
   outline: 3px solid #b9b4ef;
   outline-offset: 3px;
@@ -738,4 +744,114 @@ body.dark #sessionRestart:hover {
 body.dark #sessionTitle[aria-invalid="true"] {
   border-color: #ff9aa9;
   outline-color: #ff9aa9;
+}
+
+body.dark .site-nav a.is-current {
+  color: #b9b4ef;
+  background-color: #343246;
+}
+
+/* 세션 기록 필터 */
+.session-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.filter-button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid #d7d4f6;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #292a31;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-button.is-active {
+  border-color: #5b50c8;
+  background-color: #5b50c8;
+  color: #ffffff;
+}
+
+/* 저장된 세션 카드 */
+.session-card {
+  margin-top: 12px;
+  padding: 20px;
+  border: 1px solid #d7d4f6;
+  border-radius: 12px;
+  background-color: #f4f3ff;
+}
+
+.session-card button {
+  padding: 10px 14px;
+  border: 1px solid #d7d4f6;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 결과가 없을 때 목록 숨기기 */
+#sessionEmpty[hidden],
+#sessionList[hidden] {
+  display: none;
+}
+
+/* 어두운 테마 */
+body.dark .session-card {
+  background-color: #343246;
+  border-color: #50515f;
+}
+
+body.dark .filter-button.is-active {
+  color: #ffffff;
+  background-color: #5b50c8;
+  border-color: #5b50c8;
+}
+
+
+/* 모바일 메뉴 버튼 */
+.menu-toggle {
+  display: none;
+  padding: 10px 14px;
+  border: 1px solid #d7d4f6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #5b50c8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 600px 이하 모바일 메뉴 */
+@media (max-width: 600px) {
+  .menu-toggle {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 12px;
+  }
+
+  .site-nav {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .site-nav.is-open {
+    display: flex;
+  }
+
+  .site-nav a {
+    display: block;
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+  #themeButton {
+    width: 100%;
+    margin-left: 0;
+  }
 }
