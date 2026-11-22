@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#top">본문 바로가기</a>
     <!--
   사용자: TRPG를 하는 사람 / TRPG란? TRPG는 참가자들이 각자의 캐릭터를 맡아 대화와 선택, 주사위를 통해 함께 이야기를 만들어가는 역할극 게임입니다.
   목적: TRPG에 사용하는 캐릭터를 정리한다.
@@ -35,7 +36,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="top" tabindex="-1">
     <section id="about" class="content-section">
       <h2>서비스 소개</h2>
       <div class="about-layout">
@@ -44,7 +45,7 @@
           <p>이런저런 스프레드 시트에 나뉘어져있는 TRPG 캐릭터들을 한번에 관리할 수 있습니다.</p>
         </div>
          <img class="service-image" src="assets/images/service.png"
-          alt="TRPG 캐릭터의 설정과 캐릭터 시트, 플레이 기록 관리">
+          alt="20면체 주사위를 형상화한 아이콘">
       </div>
     </section>
 
@@ -194,7 +195,7 @@
             maxlength="60"
             required
             placeholder="세션 제목을 입력하세요"
-            aria-describedby="sessionTitleHelp sessionTitleCount"
+            aria-describedby="sessionTitleHelp sessionTitleCount sessionError"
           >
           <p id="sessionTitleHelp">세션 제목을 2자 이상 입력해 주세요.</p>
           <p id="sessionTitleCount">0 / 60자</p>
@@ -261,12 +262,13 @@
         aria-pressed="false">상세 기록 없음</button>
     </div>
 
-    <p id="sessionCount">표시 중인 세션 0개</p>
+    <p id="sessionCount" role="status" aria-live="polite">표시 중인 세션 0개</p>
 
     <div id="sessionEmpty">
       <p id="sessionEmptyMessage">
         아직 저장한 세션 기록이 없습니다.
       </p>
+      <a id="sessionEmptyAction" href="#register">시작하기</a>
     </div>
 
     <div id="sessionList"></div>

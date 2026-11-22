@@ -70,6 +70,7 @@ function registerUser() {
   showCharacterStep(1);
 
   registerCompleteMessage.hidden = false;
+  characterName.focus();
 
   console.log("회원가입이 완료되었습니다.");
 }
@@ -216,6 +217,7 @@ document.querySelector("#characterNext2")
       `TRPG 룰: ${characterRule.value}`;
 
     showCharacterStep(3);
+    document.querySelector("#characterComplete").focus();
   });
 
 // 룰 변경 시 오류 메시지 제거
@@ -246,6 +248,7 @@ document.querySelector("#characterComplete")
     sessionFlow.hidden = false;
 
     sessionCharacterName.textContent = characterName.value.trim();
+    sessionTitle.focus();
   });
 
 const sessionFlow = document.querySelector("#sessionFlow");
@@ -393,6 +396,7 @@ sessionError.textContent = "";
 
     sessionForm.hidden = true;
     sessionResult.hidden = false;
+    sessionRestart.focus();
   }, 600);
 });
 
@@ -445,6 +449,12 @@ function updateCurrentNav() {
       link.removeAttribute("aria-current");
     }
   });
+
+  const currentLink = document.querySelector('.site-nav a[aria-current="page"]');
+  const pageName = currentLink
+    ? currentLink.textContent.trim()
+    : currentHash === "#sessionArchive" ? "세션 기록 모아보기" : "홈";
+  document.title = pageName + " | TRPG 서랍장";
 }
 
 window.addEventListener("hashchange", updateCurrentNav);
@@ -480,6 +490,7 @@ const sessionList = document.querySelector("#sessionList");
 const sessionEmpty = document.querySelector("#sessionEmpty");
 const sessionEmptyMessage = document.querySelector("#sessionEmptyMessage");
 const sessionCount = document.querySelector("#sessionCount");
+const sessionEmptyAction = document.querySelector("#sessionEmptyAction");
 
 // 선택한 조건에 맞는 세션 가져오기
 function getVisibleSessions() {
@@ -499,16 +510,25 @@ function renderSessions() {
   sessionEmpty.hidden = visibleSessions.length !== 0;
   sessionList.hidden = visibleSessions.length === 0;
 
-  sessionCount.textContent =
-    `표시 중인 세션 ${visibleSessions.length}개`;
+  const selectedFilter = document.querySelector('.filter-button[aria-pressed="true"]');
+  const filterName = selectedFilter ? selectedFilter.textContent.trim() : "전체";
+  sessionCount.textContent = visibleSessions.length > 0
+    ? `${filterName} 세션 ${visibleSessions.length}개가 표시됩니다.`
+    : `${filterName} 세션이 없습니다. 다른 조건을 선택해 보세요.`;
 
   if (visibleSessions.length === 0) {
     sessionEmptyMessage.textContent = currentFilter === "all"
       ? "아직 저장한 세션 기록이 없습니다."
       : "선택한 조건의 세션 기록이 없습니다.";
+    sessionEmptyAction.textContent = currentFilter === "all"
+      ? "시작하기"
+      : "전체 보기";
+    sessionEmptyAction.href = currentFilter === "all"
+      ? "#register"
+      : "#sessionArchive";
   }
 
-  visibleSessions.forEach(function (session) {
+  visibleSessions.forEach(function (session, index) {
     const card = document.createElement("article");
     card.className = "session-card";
 
@@ -526,12 +546,16 @@ function renderSessions() {
     const detail = document.createElement("p");
     detail.textContent = session.log || "상세 기록이 없습니다.";
     detail.hidden = true;
+    detail.id = `session-detail-${index}`;
+    detailButton.setAttribute("aria-controls", detail.id);
+    detailButton.setAttribute("aria-expanded", "false");
 
     detailButton.addEventListener("click", function () {
       detail.hidden = !detail.hidden;
       detailButton.textContent = detail.hidden
         ? "내용 보기"
         : "내용 닫기";
+      detailButton.setAttribute("aria-expanded", String(!detail.hidden));
     });
 
     card.append(title, information, detailButton, detail);
@@ -542,6 +566,16 @@ function renderSessions() {
 // 처음 화면에 목록 표시
 renderSessions();
 
+// 필터 결과가 비었을 때 전체 목록으로 복귀
+sessionEmptyAction.addEventListener("click", function (event) {
+  if (currentFilter === "all") return;
+
+  event.preventDefault();
+  const allButton = document.querySelector('[data-filter="all"]');
+  allButton.click();
+  allButton.focus();
+});
+
 
 // 모바일 메뉴 열기와 닫기
 menuToggle.addEventListener("click", function () {
@@ -549,6 +583,16 @@ menuToggle.addEventListener("click", function () {
 
   menuToggle.textContent = isOpen ? "메뉴 닫기" : "메뉴 열기";
   menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+// 열린 모바일 메뉴를 Esc로 닫고 초점을 메뉴 버튼으로 돌리기
+document.addEventListener("keydown", function (event) {
+  if (event.key !== "Escape" || !mainNav.classList.contains("is-open")) return;
+
+  mainNav.classList.remove("is-open");
+  menuToggle.textContent = "메뉴 열기";
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.focus();
 });
 
 // 메뉴를 선택하면 자동으로 닫기

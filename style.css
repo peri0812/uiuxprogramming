@@ -855,3 +855,56 @@ body.dark .filter-button.is-active {
     margin-left: 0;
   }
 }
+
+/* 11주차: 키보드 접근과 현재 선택 상태 표시 */
+:focus-visible {
+  outline: 3px solid #5b50c8;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 10px 14px;
+  border: 2px solid #5b50c8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #292a31;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.site-nav a[aria-current="page"],
+.filter-button[aria-pressed="true"] {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+#sessionEmptyAction {
+  display: inline-block;
+  padding: 8px 0;
+  color: #4038a5;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+body.dark .skip-link {
+  background-color: #2d2e38;
+  color: #f4f4f8;
+  border-color: #b9b4ef;
+}
+
+body.dark #sessionEmptyAction {
+  color: #b9b4ef;
+}
+
+body.dark :focus-visible {
+  outline-color: #b9b4ef;
+}
